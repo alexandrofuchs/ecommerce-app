@@ -1,0 +1,19 @@
+.root-SignInPage{
+  min-width: 300px;
+  max-width: 100%;
+  display: flex;
+  
+  flex-direction: column; 
+  justify-content: center;
+  align-items: center;
+}
+
+.main-SignInPage{
+  min-width: 600px;
+  text-align: center;
+  justify-content: center;
+}
+
+.submit-SignInPage{
+  color: gray;
+}

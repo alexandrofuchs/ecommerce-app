@@ -1,0 +1,15 @@
+.root-virtualizedList {
+    width: 10%;
+    height: 90%;
+    flex-direction: column;   
+    background-color: blue; 
+}
+
+.listSection-virtualizedList {
+  background-color: 'inherit';
+}
+
+.ul-virtualizedList {
+  background-color: 'inherit';
+  padding: 0;
+}
