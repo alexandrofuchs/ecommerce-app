@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Api from '../../../services/api';
+import { useApp } from '../../../contexts/AppContext';
 
 const useStyles = makeStyles({
   list: {
@@ -29,13 +30,18 @@ export default function CategoriesMenu() {
     setState(!state);
   };
 
-  const [categories, setCategories] = useState([]);
+  const { category, setCategory } = useApp();
+  const [categories, setCategories] = useState(null);
+
+  const handleCategory = (event) => {
+    console.log(event.target.parentNode.id)
+    setCategory(event.target.parentNode.id);
+  }
 
   useEffect(() => {
     const fetchData = async () => {
       const res = await Api.get('/categories');
       if (res.data) {
-        console.log(res.data)
         setCategories(res.data.data);
       }
     }
@@ -52,13 +58,17 @@ export default function CategoriesMenu() {
           onClick={toggleDrawer}
           onKeyDown={toggleDrawer}
         >
-          <List>
-            {['Eletronicos', 'Informatica', 'Cozinha', 'Lazer'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemText primary={text} />
+          { categories ? 
+            (<List>
+            {categories.map((cat) => (
+              <ListItem button key={cat.id} id={cat.id} >
+                <ListItemText id={cat.description} primary={cat.description} onClick={handleCategory}/>
               </ListItem>
             ))}
-          </List>
+          </List>) : null       
+        
+          }
+  
         </div>
       </Drawer>
     </>

@@ -1,13 +1,21 @@
 import Axios from 'axios';
 
 const Api = Axios.create({
-    baseURL: 'http://localhost:5000',
+    baseURL: 'http://localhost:1996/',
     timeout: 5000,
     headers: { 'Content-Type': 'application/json; charset=utf-8' }
 });
 
+const Api2 = Axios.create({
+    baseURL: 'http://localhost:1337/',
+    timeout: 5000,
+    headers: { 'Content-Type': 'application/json; charset=utf-8' }
+});
+
+
 const onSucess = res => {
     try {
+        console.log(res)
         return {
             data: res.data,
             error: null
@@ -22,6 +30,7 @@ const onSucess = res => {
 
 const onRejected = err => {
     try {
+        console.log(err)
         if (err.response) {
             return {
                 data: null,
@@ -42,4 +51,7 @@ const onRejected = err => {
 
 Api.interceptors.response.use(onSucess, onRejected);
 
+Api2.interceptors.response.use(onSucess, onRejected);
+
 export default Api;
+export { Api2 } ;

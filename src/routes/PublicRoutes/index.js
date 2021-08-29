@@ -9,7 +9,7 @@ export default function PublicRoutes() {
         <Switch>            
             <Route path='/signin' component={SignInPage} />
             <Route path='/signup' component={SignUpPage} />
-            <Route path='/products' component={CommonRoutes} />
+            <Route path='/' component={CommonRoutes} />
         </Switch>
     )
 }

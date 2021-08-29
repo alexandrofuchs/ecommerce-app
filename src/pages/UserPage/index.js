@@ -10,19 +10,18 @@ export default function UserPage() {
     const { authenticatedUser } = useAuthenticate()
 
     const [user, setUser] = useState({
-        Id: "",
-        FirstName: "",        
-        LastName: "",
-        Email: "",
-        CreatedAt: "",
-        UpdatedAt: "",  
+        id: "",
+        firstName: "",        
+        lastName: "",
+        email: "",
+        cpf: "",        
+        createdAt: "",
+        updatedAt: "",  
     });
-
-
 
     const MenuOptions = [
         {title:'Dados', url: '#'}, 
-        {title:'Favoritos', url: '#'}, 
+        {title:'Pedidos', url: '#'}, 
         {title:'Alterar Senha', url: '#'}, 
         {title:'Excluir Conta', url: '#'}, 
     ];
@@ -34,7 +33,7 @@ export default function UserPage() {
     return (
 
         <div className="root-UserPage">
-            <h1>{`Olá, ${user.FirstName} `}</h1>            
+            <h1>{`Olá, ${user.firstName} `}</h1>            
             <div className="main-UserPage">
             <Divider/>
             <List>

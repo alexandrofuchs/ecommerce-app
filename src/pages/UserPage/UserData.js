@@ -9,9 +9,9 @@ import { useAuthenticate } from '../../contexts/UserContext';
 
 export default function UserData({ user, setUser }) {
     const [edit, setEdit] = useState(false);
-    const [firstName, setFirstName] = useState(user.FirstName);        
-    const [lastName, setLastName] = useState(user.LastName);
-    const [email, setEmail] = useState(user.Email);
+    const [firstName, setFirstName] = useState(user.firstName);        
+    const [lastName, setLastName] = useState(user.lastName);
+    const [email, setEmail] = useState(user.email);
 
      const [error, setError] = useState(null);
 
@@ -22,14 +22,12 @@ export default function UserData({ user, setUser }) {
     }
 
     const onClickSave = async () => {
-        const res = await Api.patch(`/user/${user.Id}`, {
-            FirstName: firstName,
-            LastName: lastName,
-            Email: email
+        const res = await Api.put(`/users/${user.Id}`, {
+            firstName: firstName,
+            lastName: lastName,
+            email: email
         })
-        console.log(res);
         if(res.error){
-            console.log(res.error)
             setError(res.error)
         }else{
             handleEdit()
@@ -48,7 +46,8 @@ export default function UserData({ user, setUser }) {
                         <form className="form-UserData" noValidate autoComplete="off">
                             <ErrorAlert message={error}/>
                             <RequiredTextField
-                                id={"fistName"}
+                                id={"firstName"}
+                                key={"firstName"}
                                 label={"Nome"}
                                 value={firstName}
                                 onChange={(event) => setFirstName(event.target.value)}
@@ -56,6 +55,7 @@ export default function UserData({ user, setUser }) {
                             />
                             <RequiredTextField
                                 id={"lastName"}
+                                key={"lastName"}
                                 label={"Sobrenome"}
                                 value={user.LastName}
                                 onChange={(event) => setLastName(event.target.value)}
@@ -63,6 +63,7 @@ export default function UserData({ user, setUser }) {
                             />
                             <RequiredTextField
                                 id={"email"}
+                                key={"email"}
                                 label={"Email"}
                                 value={user.Email}
                                 onChange={(event) => setEmail(event.target.value)}
@@ -70,9 +71,10 @@ export default function UserData({ user, setUser }) {
                             />               
                         </form> :
                         <>
-                            <ListItemText className="listItemText-UserData" primary={"Nome: "} secondary={user.FirstName} />                     
-                            <ListItemText className="listItemText-UserData" primary={"Sobrenome: "} secondary={user.LastName} />              
-                            <ListItemText className="listItemText-UserData" primary={"Email: "} secondary={user.Email} />
+                            <ListItemText key="firstName" className="listItemText-UserData" primary={"Nome: "} secondary={user.firstName} />                     
+                            <ListItemText key="lastName" className="listItemText-UserData" primary={"Sobrenome: "} secondary={user.lastName} />
+                            <ListItemText key="cpf" className="listItemText-UserData" primary={"CPF: "} secondary={user.cpf} />              
+                            <ListItemText key="email" className="listItemText-UserData" primary={"Email: "} secondary={user.email} />
                         </>
                 }
             </ListItem>

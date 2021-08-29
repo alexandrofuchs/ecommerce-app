@@ -4,7 +4,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import './styles.css';
 
-export default function PinnedSubheaderList({ dataList }) {
+export default function VirtualizedList({ dataList }) {
 
   return (
     <>

@@ -20,7 +20,7 @@ export default function Header(props) {
   return (
     <div className="Header">
       <Toolbar className={"toolbar-Header"}>
-        <Button><Link to="/products">Inicio</Link></Button>
+        <Button><Link to="/">Inicio</Link></Button>
         <Typography
           component="h2"
           variant="h5"

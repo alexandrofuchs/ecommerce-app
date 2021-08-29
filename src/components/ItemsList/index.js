@@ -35,7 +35,7 @@ export default function ItemsList(items) {
   const classes = useStyles();
 
   return (
-    <List className={classes.root}>
+    <List>
       <Paper>
         {ITEMS.map((item, index) => (
           <React.Fragment key={index}>

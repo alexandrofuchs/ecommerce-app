@@ -15,11 +15,11 @@ export default function Routes() {
     if (loading) {
         return <LoadingPage />
     }
+    
     return (
         <BrowserRouter>
             <Header title="Shopping App" />
-            <div className="Main">
-                
+            <div className="Main">                
                 {signed ? (isUserAdmin ? <AdminRoutes /> : <ProtectedRoutes />) : <PublicRoutes />}
             </div> 
         </BrowserRouter>

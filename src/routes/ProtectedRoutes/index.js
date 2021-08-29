@@ -7,8 +7,8 @@ import CommonRoutes from '../CommonRoutes';
 export default function ProtectedRoutes() {
     return (
         <Switch>
-            <Route path="/user/:id/config" component={UserPage} />    
-            <Route path="*" component={CommonRoutes} />            
+            <Route path="/user/:id" component={UserPage} />    
+            <Route path="/" component={CommonRoutes} />            
         </Switch>
     )
 }

@@ -7,7 +7,11 @@ import UseStyles from './styles.js';
 import { Link } from 'react-router-dom';
 import Api from '../../services/api';
 import ItemsList from '../../components/ItemsList';
-function HomePage() {
+import SideLeft from '../../components/SideLeft';
+import ProductList from '../../components/ProductList/index.js';
+import { useApp } from '../../contexts/AppContext/index.js';
+
+export default function HomePage() {
 
     const classes = UseStyles();
 
@@ -22,29 +26,20 @@ function HomePage() {
         updatedAt: "",
     }]); 
 
-    const [selectedCategory, setCategory] = useState(null); 
-
-    const fetchVideos = async () => {
-        const res = await Api.get('/videos');
-        console.log(res);
-        if(res.data){
-            setData(res.data.data);
-        }
-    }
-
-    useEffect(()=>{
-        fetchVideos();
-    },[])
-
+    const { category, setCategory } = useApp();
+    
     return (
-   
+        <>
+        <SideLeft/> 
+        <Divider orientation="vertical" />           
             <div className={classes.root}>
                 <h1>
-                    Produtos {selectedCategory ? `de ${selectedCategory}` : null }
+                    Produtos {category ? `de ${category}` : null }
                 </h1>
-                <ItemsList />
+                <ProductList/>
         </div>
+        </>
     );
 }
-export default HomePage
+
 

@@ -30,8 +30,8 @@ export default function UserMenu() {
   return (
     <>
         <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-        <Avatar className="avatar-UserMenu">{authenticatedUser.FirstName[0]}</Avatar>
-        {authenticatedUser.FirstName}
+        <Avatar className="avatar-UserMenu">{authenticatedUser.firstName[0]}</Avatar>
+        {authenticatedUser.firstName}
       </Button>
       <Menu
         id="simple-menu"
@@ -40,8 +40,8 @@ export default function UserMenu() {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose}><Link to={`/user/${authenticatedUser.Id}/config`}>Configurações do usuário</Link></MenuItem>
-        { isUserAdmin ? <MenuItem onClick={handleClose}><Link to={`/categories`}>Configurações da Pagina</Link></MenuItem> : null }
+        <MenuItem onClick={handleClose}><Link to={`/user/${authenticatedUser.id}`}>Configurações do usuário</Link></MenuItem>
+        { isUserAdmin ? <MenuItem onClick={handleClose}><Link to={`/private`}>Configurações de Administrador</Link></MenuItem> : null }
         <MenuItem onClick={onSignOut}>Sair</MenuItem>
       </Menu>
     </>

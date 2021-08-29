@@ -21,47 +21,47 @@ export default function AuthenticateProvider({ children }) {
     const signIn = async (email, password) => {
         setLoading(true);
         if (email && password) {
-            const res = await Api.post('/authenticate', { email, password });
-            if (res.error) { 
-                setError(res.error)
+            const res = await Api.post('/users/authenticate', { email, password });
+            if (res.error) {         
+                setError(res.error.message)
                 setLoading(false);
                 return;
             }
 
             Api.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
             let decoded = await jwtDecode(res.data.token);
-            localStorage.setItem("$Authenticate:token", res.data.token);
+            localStorage.setItem("$Authenticate:token", res.data.token); 
             localStorage.setItem("$Authenticate:user", JSON.stringify(decoded));
             setAuthenticatedUser(decoded);
-           
+
         }
         setLoading(false);
     }
 
-        useEffect(() => {
-            
-            setLoading(true);
-            const validateStoragedToken = async () => {
+    useEffect(() => {
 
-                const token = await localStorage.getItem("$Authenticate:token");
-                const user = await localStorage.getItem("$Authenticate:user");
-             
-                if (token && user) {
-                    Api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-                    const res = await Api.get('user/validatetoken');
-                    
-                    if (res.error) {
-                        signOut();
-                        return;
-                    }
-                    if(res.data){
-                        setAuthenticatedUser(JSON.parse(user));
-                    }                   
+        setLoading(true);
+        const validateStoragedToken = async () => {
+
+            const token = await localStorage.getItem("$Authenticate:token");
+            const user = await localStorage.getItem("$Authenticate:user");
+            if (token && user) {
+
+                Api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                const res = await Api.get('/users/validate');
+
+                if (res.error) {
+                    signOut();
+                    return;
+                }
+                if (res.data) {
+                    setAuthenticatedUser(JSON.parse(user));
                 }
             }
-            validateStoragedToken();
-            setLoading(false)
-        }, [])
+        }
+        validateStoragedToken();
+        setLoading(false)
+    }, [])
 
     const signOut = () => {
         localStorage.clear();
@@ -70,7 +70,7 @@ export default function AuthenticateProvider({ children }) {
     }
 
     return (
-        <AuthenticateContext.Provider value={{ signed: !!authenticatedUser, authenticatedUser, isUserAdmin: (!!authenticatedUser && authenticatedUser.role === "admin")? true:false, signIn, signOut, loading }}>
+        <AuthenticateContext.Provider value={{ signed: !!authenticatedUser, authenticatedUser, isUserAdmin: (!!authenticatedUser && !!authenticatedUser.isAdmin) ? true : false, signIn, signOut, loading }}>
             {children}
         </AuthenticateContext.Provider>
     )

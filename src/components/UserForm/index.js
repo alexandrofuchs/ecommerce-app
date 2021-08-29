@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {  useState } from 'react';
 import {
   CardActions,
   CardContent,
@@ -12,10 +12,11 @@ import './styles.css';
 import { useApp } from '../../contexts/AppContext';
 import { Link } from 'react-router-dom';
 
-const TryRegister = async (firstName, lastName, email, password) => {
+const TryRegister = async (firstName, lastName, email, cpf, password) => {
   let res = await Api.post('/users', {
     firstName,
     lastName,
+    cpf,
     email,
     password,
   });
@@ -24,55 +25,49 @@ const TryRegister = async (firstName, lastName, email, password) => {
 
 export default function SignUpPage() {
 
-  const { error, setError, setLoading } = useApp();
-
+  const { error, setError, setLoading  } = useApp();
+ 
   const [firstNameField, setFirstNameField] = useState({
     value: "",
-    error: null,
+    errors: null,
   });
   const [lastNameField, setLastNameField] = useState({
     value: "",
-    error: null,
+    errors: null,
   });
   const [emailField, setEmailField] = useState({
     value: "",
-    error: null,
+    errors: null,
   });
   const [passwordField, setPasswordField] = useState({
     value: "",
-    error: null,
+    errors: null,
   });
   const [repeatPasswordField, setRepeatPasswordField] = useState({
     value: "",
-    error: null,
+    errors: null,
   });
 
   const onSubmit = async () => {
-    setLoading(true)
+     setLoading(true)
 
     let res = await TryRegister(firstNameField.value, lastNameField.value, emailField.value, passwordField.value);
-
-    console.log(res.error)
-
-    if (res.error) {
-      console.log(res.error)
-      res.error.map((e) => {
-        console.log(e.firstName)
-        if (!!e.firstName) { setFirstNameField({ ...firstNameField, error: e.firstName } ) ; console.log("oi") }
-        else if (!!e.lastName) { setLastNameField({ errors: e.lastName }); }
-        else if (!!e.email) { setEmailField({ errors: e.email }); }
-        else if (!!e.password) { setPasswordField({ errors: e.password }); }
-      })
-     } else {
-    //   setLoading(false)
-    //   window.location = '/signin'
+    
+    if (res.error) {    
+      console.log(res)     
+      setError(res.error);
+      if (res.error.errors) {
+        if (res.error.errors.FirstName) { setFirstNameField({ errors: res.error.errors.FirstName }) };
+        if (res.error.errors.LastName) { setLastNameField({ errors: res.error.errors.LastName }); }
+        if (res.error.errors.Email) { setEmailField({ errors: res.error.errors.Email }); }
+        if (res.error.errors.Password) { setPasswordField({ value: "", errors: res.error.errors.Password }); }
+      }      
+    }else{ 
+      setLoading(false)
+      window.location = '/signin'
     }
     setLoading(false)
   }
-
-  useEffect( () => {
-    console.log(firstNameField)
-  }, [firstNameField])
 
   return (
     <div className={"root-SignUpPage"}>
@@ -85,7 +80,7 @@ export default function SignUpPage() {
             label="Nome"
             autoFocus={true}
             onChange={event => setFirstNameField({ value: event.target.value })}
-            error={firstNameField.error}
+            error={firstNameField.errors ? firstNameField.errors.map(e => e) : ""}
           />
           <RequiredTextField
             id="lastName"
@@ -120,8 +115,8 @@ export default function SignUpPage() {
           variant="default"
           onClick={onSubmit}
         >
-          Enviar
-        </Button>
+          Sign Up
+          </Button>
       </CardActions>
       <Grid container justify="flex-end">
         <Grid item>
@@ -132,7 +127,7 @@ export default function SignUpPage() {
       </Grid>
 
     </div>
-
+   
 
   );
 }
