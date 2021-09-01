@@ -1,63 +1,87 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Chip from '@material-ui/core/Chip';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
+import {
+  Button,
+  Grid,
+  Divider,
+  Typography,
+  FormControl,
+  TextField,
+} from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import { useApp } from '../../contexts/AppContext';
+import useStyles from './styles';
+import NumberFormat from 'react-number-format';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '100%',
-    //maxWidth: 360,
-    backgroundColor: theme.palette.background.paper,
-  },
-  chip: {
-    margin: theme.spacing(0.5),
-  },
-  section1: {
-    margin: theme.spacing(3, 2),
-  },
-  section2: {
-    margin: theme.spacing(2),
-  },
-  section3: {
-    margin: theme.spacing(3, 1, 1),
-  },
-}));
+const imagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9tFOpByFPJfQwGOa94wLJYESIaSgNxfS-GlVBJiMH1PTPTeyuO2IU2vDyxb6PPeFPREMTA0jK&usqp=CAc"
 
-export default function ProductRow({ id, name, description, price }){
+export default function ProductRow({ id, url, name, description, price }) {
 
   const classes = useStyles();
 
+  const { addToCart } = useApp();
+
+  const [quantity, setQuantity] = React.useState(1);
+
+  const addItem = () => {
+    if (quantity < 10) {
+      setQuantity(quantity + 1)
+    }
+  }
+
+  const onAddToCart = () => {
+    addToCart(id, quantity, { name, description, price })
+  }
+
+  const removeItem = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1)
+    }
+  }
+
+  const handleChange = (event) => {
+    setQuantity(event.target.value);
+  };
+
   return (
-    <div className={classes.root}>
-      <div className={classes.section1}>
-        <Link to={`product/${id}`}>        
-        <Grid container alignItems="center">
-          <Grid item xs>
-            <Typography gutterBottom variant="h4">
-              {name}
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography gutterBottom variant="h6">
-              {price}
-            </Typography>
-          </Grid>
-        </Grid>
-        <Typography color="textSecondary" variant="body2">
-          {description}
+    <>
+    <Grid container className={classes.root}>
+      <Grid item>
+        <img className={classes.img} src={url} />
+      </Grid>
+      <Link to={`product/${id}`} className={classes.item}>
+        <Typography gutterBottom variant="h4">
+          {name}
         </Typography>
-        </Link>
-      </div>
-      <Divider variant="middle" />
-      <div className={classes.section3}>
-        <Button color="primary">Adicionar ao Carrinho</Button>
-        
-      </div>
-      <Divider variant="middle" />
-    </div>
+       <h2>
+        <NumberFormat value={price} displayType={'text'}  decimalSeparator="," thousandSeparator="." prefix={'R$'} allowLeadingZeros={true} fixedDecimalScale={true} />
+       </h2>
+      </Link>
+      <FormControl className={classes.formControl}>
+        <TextField
+          id="standard-number"
+          label="Quantidade"
+          value={quantity}
+          onChange={(e) => setQuantity(e.target.valueAsNumber)}
+          type="number"
+          InputProps={{
+            inputProps: {
+              contentEditable: false,
+              max: 10, min: 1
+            }
+          }}
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+        <Button
+          color="primary"
+          onClick={onAddToCart}
+        >
+          Adicionar ao Carrinho
+        </Button>
+      </FormControl>      
+    </Grid>
+    <Divider variant="fullWidth" style={{width:'100%'}}  />
+    </>
   );
 }

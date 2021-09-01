@@ -1,4 +1,5 @@
 import React from 'react';
 
-const LoadingPage = () => <text>Not Found</text>
+const LoadingPage = () => <h3>Not Found</h3>
+
 export default LoadingPage;

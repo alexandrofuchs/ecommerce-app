@@ -6,17 +6,18 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import { useAuthenticate } from '../../../contexts/UserContext';
+import { useAuthenticate } from '../../contexts/UserContext';
 import './styles.css';
+
 export default function UserMenu() {
+
   const [anchorEl, setAnchorEl] = React.useState(null);
+
   const { authenticatedUser, isUserAdmin, signOut } = useAuthenticate();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
-
 
   const onSignOut = () => {
     handleClose();

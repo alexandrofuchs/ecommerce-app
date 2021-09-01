@@ -1,16 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import {
   Button,
+  Divider,
   Drawer,
   List,
   ListItem,
-  ListItemText
+  ListItemText,
+  Typography
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import Api from '../../../services/api';
-import { useApp } from '../../../contexts/AppContext';
+import Api from '../../services/api';
+import { useApp } from '../../contexts/AppContext';
 
 const useStyles = makeStyles({
+  header: {
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  title: {
+    fontWeight: 'bold',
+    fontSize: 22,
+    justifyContent: 'center'
+  },
   list: {
     width: 250,
   },
@@ -34,15 +45,15 @@ export default function CategoriesMenu() {
   const [categories, setCategories] = useState(null);
 
   const handleCategory = (event) => {
-    console.log(event.target.parentNode.id)
     setCategory(event.target.parentNode.id);
   }
 
   useEffect(() => {
     const fetchData = async () => {
       const res = await Api.get('/categories');
+      console.log(res.data)
       if (res.data) {
-        setCategories(res.data.data);
+        setCategories(res.data);
       }
     }
     fetchData();
@@ -51,13 +62,18 @@ export default function CategoriesMenu() {
   return (
     <>
       <Button onClick={toggleDrawer}>Categorias</Button>
-      <Drawer open={state} onClose={toggleDrawer}>
+      <Drawer open={state} onClose={toggleDrawer} anchor={'left'}>
         <div
           className={classes.list}
           role="presentation"
           onClick={toggleDrawer}
           onKeyDown={toggleDrawer}
         >
+          <div className={classes.header}>
+            <Typography className={classes.title} variant="h4">Categorias</Typography>
+          </div>
+          
+          <Divider/>
           { categories ? 
             (<List>
             {categories.map((cat) => (

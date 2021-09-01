@@ -32,6 +32,12 @@ const onRejected = err => {
     try {
         console.log(err)
         if (err.response) {
+            if( Array.isArray(err.response.data.error) ){
+                return{
+                    data: null,
+                    error: err.response.data.error.toString(),
+                };
+            }
             return {
                 data: null,
                 error: err.response.data,

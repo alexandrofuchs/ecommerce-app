@@ -3,7 +3,7 @@ import { ListItem, ListItemText, Button} from '@material-ui/core';
 import './styles.css';
 import PropTypes from 'prop-types';
 import Api from '../../services/api';
-import ErrorAlert from '../../components/ErrorAlert';
+import { ErrorAlert } from '../../components/Alerts';
 import RequiredTextField from '../../components/TextFields/RequiredTextField';
 import { useAuthenticate } from '../../contexts/UserContext';
 

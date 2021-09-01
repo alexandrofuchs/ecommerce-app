@@ -6,13 +6,15 @@ import {
   Grid,
 } from '@material-ui/core';
 import RequiredTextField from '../../components/TextFields/RequiredTextField';
-import './styles.css';
+import useStyles from './styles.js';
 import { useAuthenticate } from '../../contexts/UserContext';
-import ErrorAlert from '../../components/ErrorAlert';
+import { ErrorAlert } from '../../components/Alerts';
 import {  Link } from 'react-router-dom';
 import { useApp } from '../../contexts/AppContext';
 
 export default function SignInPage() {
+
+  const classes = useStyles()
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,15 +23,13 @@ export default function SignInPage() {
   const { error } = useApp()
 
   const onSubmit = async () => {
-     await signIn(email, password);
-   
+     await signIn(email, password);        
   }
 
   return (
-    <>
-      <div className={"root-SignInPage"}>
+      <div className={classes.root}>
         <h1>Acessar conta</h1>
-        <div className={"main-SignInPage"}>
+        <div className={classes.main}>
           <form noValidate>
             <RequiredTextField
               id={"email"}
@@ -61,7 +61,7 @@ export default function SignInPage() {
           </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <Link to="#" variant="body2">
                   Esqueceu sua senha?
               </Link>
               </Grid>
@@ -74,6 +74,5 @@ export default function SignInPage() {
           </form>          
         </div>
       </div>
-    </>
   );
 }

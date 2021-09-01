@@ -1,133 +1,97 @@
-import React, {  useState } from 'react';
-import {
-  CardActions,
-  CardContent,
-  Button,
-  Grid,
-} from '@material-ui/core';
-import RequiredTextField from '../../components/TextFields/RequiredTextField';
-import ErrorAlert from '../../components/ErrorAlert';
-import Api from '../../services/api';
+import React, { useState, useEffect } from 'react';
+import { ListItem, ListItemText, Button } from '@material-ui/core';
 import './styles.css';
-import { useApp } from '../../contexts/AppContext';
-import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import Api from '../../services/api';
+import { ErrorAlert } from '../../components/Alerts';
+import RequiredTextField from '../../components/TextFields/RequiredTextField';
+import { useAuthenticate } from '../../contexts/UserContext';
 
-const TryRegister = async (firstName, lastName, email, cpf, password) => {
-  let res = await Api.post('/users', {
-    firstName,
-    lastName,
-    cpf,
-    email,
-    password,
-  });
-  return res;
-}
+export default function UserForm({ user, setUser }) {
 
-export default function SignUpPage() {
+  const [error, setError] = useState(null);
 
-  const { error, setError, setLoading  } = useApp();
- 
-  const [firstNameField, setFirstNameField] = useState({
-    value: "",
-    errors: null,
-  });
-  const [lastNameField, setLastNameField] = useState({
-    value: "",
-    errors: null,
-  });
-  const [emailField, setEmailField] = useState({
-    value: "",
-    errors: null,
-  });
-  const [passwordField, setPasswordField] = useState({
-    value: "",
-    errors: null,
-  });
-  const [repeatPasswordField, setRepeatPasswordField] = useState({
-    value: "",
-    errors: null,
-  });
+  const { authenticatedUser } = useAuthenticate()
 
-  const onSubmit = async () => {
-     setLoading(true)
-
-    let res = await TryRegister(firstNameField.value, lastNameField.value, emailField.value, passwordField.value);
-    
-    if (res.error) {    
-      console.log(res)     
-      setError(res.error);
-      if (res.error.errors) {
-        if (res.error.errors.FirstName) { setFirstNameField({ errors: res.error.errors.FirstName }) };
-        if (res.error.errors.LastName) { setLastNameField({ errors: res.error.errors.LastName }); }
-        if (res.error.errors.Email) { setEmailField({ errors: res.error.errors.Email }); }
-        if (res.error.errors.Password) { setPasswordField({ value: "", errors: res.error.errors.Password }); }
-      }      
-    }else{ 
-      setLoading(false)
-      window.location = '/signin'
+  const onClickSave = async () => {
+    if (user.id) {
+      const res = await Api.put(`/users/${user.id}`, {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        cpf: user.cpf
+      })
+      if (res.error) {
+        setError(res.error)
+      } 
+    } else {
+      const res = await Api.post(`/users`, {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        cpf: user.cpf
+      })
+      if (res.error) {
+        console.log(res.error)
+        setError(res.error)
+      } 
     }
-    setLoading(false)
   }
-
   return (
-    <div className={"root-SignUpPage"}>
-      <h1>Criar conta</h1>
-      <CardContent className="signUpCardContent">
-        <ErrorAlert message={error ? error : ""} />
-        <form className={"form"} noValidate>
+      <ListItem>
+        <form className="form-UserData" noValidate autoComplete="off">
+          <div style={{ display: 'flex', flexDirection: 'row' }} >
+            {Array.isArray(error) ?
+              error.map(e => <ErrorAlert message={` ${e} `} />) : null}
+          </div>
           <RequiredTextField
-            id="firstName"
-            label="Nome"
-            autoFocus={true}
-            onChange={event => setFirstNameField({ value: event.target.value })}
-            error={firstNameField.errors ? firstNameField.errors.map(e => e) : ""}
+            id={"firstName"}
+            key={"firstName"}
+            label={"Nome"}
+            value={user.firstName}
+            onChange={(event) => setUser({ ...user, firstName: event.target.value }) }
+            onClick={() => { }}
           />
           <RequiredTextField
-            id="lastName"
-            label="Sobrenome"
-            onChange={event => setLastNameField({ value: event.target.value })}
-            error={lastNameField.errors ? lastNameField.errors.map(e => e) : ""}
+            id={"lastName"}
+            key={"lastName"}
+            label={"Sobrenome"}
+            value={user.lastName}
+            onChange={(event) => setUser({ ...user, lastName: event.target.value }) }
+            onClick={() => { }}
           />
           <RequiredTextField
-            id="email"
-            label="Email"
-            onChange={event => setEmailField({ value: event.target.value })}
-            error={emailField.errors ? emailField.errors.map(e => e) : ""}
+            id={"email"}
+            key={"email"}
+            label={"Email"}
+            value={user.email}
+            onChange={(event) => setUser({ ...user, email: event.target.value }) }
+            onClick={() => { }}
           />
           <RequiredTextField
-            id="password"
-            label="Senha"
-            onChange={event => setPasswordField({ value: event.target.value })}
-            error={passwordField.errors ? passwordField.errors.map(e => e) : ""}
+            id={"cpf"}
+            key={"cpf"}
+            label={"CPF"}
+            value={user.cpf}
+            onChange={(event) => setUser({ ...user, cpf: event.target.value }) }
+            onClick={() => { }}
           />
-          <RequiredTextField
-            id="password"
-            autoComplete="password"
-            label="Repetir senha"
-            onChange={event => setRepeatPasswordField({ value: event.target.value })}
-            error={repeatPasswordField.errors ? repeatPasswordField.errors.map(e => e) : ""}
-          />
+          {
+            !user.id ?
+              (
+                <>
+                  <RequiredTextField
+                    id={"password"}
+                    key={"password"}
+                    label={"Senha"}
+                    value={user.cpf}
+                    onChange={(event) => user.password = event.target.value}
+                    onClick={() => { }}
+                  /> 
+                </>
+              ) : null
+          }
         </form>
-      </CardContent>
-      <CardActions className="signUpCardActions">
-        <Button
-          fullWidth
-          variant="default"
-          onClick={onSubmit}
-        >
-          Sign Up
-          </Button>
-      </CardActions>
-      <Grid container justify="flex-end">
-        <Grid item>
-          <Link to="/signin" variant="body2">
-            Já tem uma conta? Entrar
-          </Link>
-        </Grid>
-      </Grid>
-
-    </div>
-   
-
-  );
+      </ListItem>
+  )
 }

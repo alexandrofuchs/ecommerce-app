@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import Api from '../../services/api';
 import jwtDecode from 'jwt-decode';
 import { useApp } from '../AppContext';
+import  { Redirect } from 'react-router-dom';
 
 const AuthenticateContext = createContext({
     signed: false,
@@ -22,7 +23,7 @@ export default function AuthenticateProvider({ children }) {
         setLoading(true);
         if (email && password) {
             const res = await Api.post('/users/authenticate', { email, password });
-            if (res.error) {         
+            if (res.error) {
                 setError(res.error.message)
                 setLoading(false);
                 return;
@@ -30,12 +31,13 @@ export default function AuthenticateProvider({ children }) {
 
             Api.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
             let decoded = await jwtDecode(res.data.token);
-            localStorage.setItem("$Authenticate:token", res.data.token); 
+            localStorage.setItem("$Authenticate:token", res.data.token);
             localStorage.setItem("$Authenticate:user", JSON.stringify(decoded));
-            setAuthenticatedUser(decoded);
-
+            setAuthenticatedUser(decoded);   
+            window.location = '/'         
         }
         setLoading(false);
+        
     }
 
     useEffect(() => {
@@ -70,7 +72,14 @@ export default function AuthenticateProvider({ children }) {
     }
 
     return (
-        <AuthenticateContext.Provider value={{ signed: !!authenticatedUser, authenticatedUser, isUserAdmin: (!!authenticatedUser && !!authenticatedUser.isAdmin) ? true : false, signIn, signOut, loading }}>
+        <AuthenticateContext.Provider value={{ 
+            signed: !!authenticatedUser, 
+            authenticatedUser, 
+            isUserAdmin: (!!authenticatedUser && !!authenticatedUser.isAdmin), 
+            signIn, 
+            signOut, 
+            loading 
+        }}>
             {children}
         </AuthenticateContext.Provider>
     )

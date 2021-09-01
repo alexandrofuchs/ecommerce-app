@@ -7,7 +7,7 @@ export default function AdminRoutes() {
     return (
         <Switch>
             <Route path="/private/" component={AdminHomePage} />
-            <Route path="/" component={ProtectedRoutes} />            
+            <Route path="*" component={ProtectedRoutes} />            
         </Switch>
     )
 }

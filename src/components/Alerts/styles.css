@@ -1,0 +1,13 @@
+.errortext {
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 13px;
+    color: red;
+}
+
+.sucesstext {
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 13px;
+    color: green;
+}

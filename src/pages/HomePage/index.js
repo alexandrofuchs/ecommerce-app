@@ -1,43 +1,56 @@
 import React, { useEffect, useState } from 'react';
 import {
-    List,
-    Divider,   
+    Divider,
 } from '@material-ui/core';
-import UseStyles from './styles.js';
-import { Link } from 'react-router-dom';
-import Api from '../../services/api';
-import ItemsList from '../../components/ItemsList';
+import useStyles from './styles.js';
 import SideLeft from '../../components/SideLeft';
-import ProductList from '../../components/ProductList/index.js';
+import ProductRow from '../../components/ProductRow';
 import { useApp } from '../../contexts/AppContext/index.js';
+import Api from '../../services/api';
 
 export default function HomePage() {
 
-    const classes = UseStyles();
+    const classes = useStyles();
 
-    const [data, setData] = useState([{
-        createdAt: "",
-        fileName: "",
-        filePath: "",
-        id: "",
-        section: null,
-        sectionId: "",
-        storagedFileName: "",
-        updatedAt: "",
-    }]); 
+    const { category } = useApp();
 
-    const { category, setCategory } = useApp();
-    
+    const [products, setProducts] = useState([]);
+      
+    useEffect(() => {
+
+        const fetchProducts = async () => {
+
+            if (category) {
+                const res = await Api.get(`/products?category=${category}`);
+                if (res.data) {
+                    setProducts(res.data.data);
+                }
+            } else {
+                const res = await Api.get('/products');
+                if (res.data) {
+                    setProducts(res.data.data);
+                }
+            }
+        }
+
+        fetchProducts();
+    }, [category])
+
     return (
         <>
-        <SideLeft/> 
-        <Divider orientation="vertical" />           
-            <div className={classes.root}>
-                <h1>
-                    Produtos {category ? `de ${category}` : null }
-                </h1>
-                <ProductList/>
-        </div>
+            {/* <SideLeft /> */}
+            <Divider orientation="vertical" />
+            <div className={classes.root}>            
+                <h2> Produtos {category ? `de ${category}` : null} </h2>
+                    {
+                        products.map(product => {
+                            return (
+                                <ProductRow key={product.id} id={product.id} url={product.url} name={product.name} description={product.description} price={product.price} />
+                            )
+                        })
+                    }  
+                         
+            </div>
         </>
     );
 }

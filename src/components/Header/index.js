@@ -9,8 +9,9 @@ import {
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { useAuthenticate } from '../../contexts/UserContext';
-import CategoriesMenu from './CategoriesMenu';
-import UserMenu from './UserMenu';
+import CategoriesMenu from '../CategoriesMenu';
+import UserMenu from '../UserMenu';
+import CartMenu from '../CartMenu';
 
 export default function Header(props) {
 
@@ -21,6 +22,7 @@ export default function Header(props) {
     <div className="Header">
       <Toolbar className={"toolbar-Header"}>
         <Button><Link to="/">Inicio</Link></Button>
+        
         <Typography
           component="h2"
           variant="h5"
@@ -28,8 +30,9 @@ export default function Header(props) {
           align="center"
           noWrap
           className={"toolbarTitle-Header"}
-        >
+        >                 
           {title}
+
         </Typography>
         {
           signed ?
@@ -41,8 +44,10 @@ export default function Header(props) {
               <Button><Link to="/signin">Entrar</Link></Button>
               |
               <Button><Link to="/signup">Criar conta</Link></Button>
+              | 
             </div>
         }
+        <CartMenu />
       </Toolbar>
       <Divider />
       <Toolbar component="nav" variant="dense" className={"toolbarSecondary-Header"}>
